@@ -1,0 +1,12 @@
+@model App.Models.PlanetModel
+
+<h1>@Model.Name</h1>
+
+<div class="card w-50">
+    <img src="~/planet/@(Model.Name).jpg" alt="">
+    <img src="~/planet/@(Model.Name).png" alt="">
+    <div class="card-text">
+        @Model.Content
+    </div>
+    <a class="card-link" asp-action="Index">Các hành tinh</a>
+</div>

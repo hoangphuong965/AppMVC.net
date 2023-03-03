@@ -1,6 +1,9 @@
+﻿using App.Services;
+using AppMvc.Net.ExtendMethods;
 using AppMvc.Net.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace AppMvc.Net
@@ -29,8 +33,9 @@ namespace AppMvc.Net
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            // dk dich vu productservice
+            // dk dich vu productservice, PlanetService
             services.AddSingleton<ProductService>();
+            services.AddSingleton<PlanetService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +53,8 @@ namespace AppMvc.Net
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.AddStatusCodePage(); // Tuy bien Response 
+
 
             app.UseRouting();
 
@@ -56,9 +63,40 @@ namespace AppMvc.Net
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                endpoints.MapGet("/sayhi", async (context) =>
+                {
+                    await context.Response.WriteAsync($"Hello ASP.NET {DateTime.Now}");
+                });
+
+                endpoints.MapControllerRoute
+                (
+                    name: "first",
+                    pattern: "{url}/{id?}",
+                    defaults: new
+                    {
+                        controller = "first",
+                        action = "ViewProduct"
+                    },
+                    constraints: new
+                    {
+                        url = "xemsanpham"
+                    }
+                );
+
+                endpoints.MapAreaControllerRoute
+                (
+                    name: "product",
+                    areaName: "ProductManage",
+                    pattern: "/{controller}/{action=index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute
+                (
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "/{controller=Home}/{action=index}/{id?}"
+                );
+
+
 
                 endpoints.MapRazorPages();
             });
