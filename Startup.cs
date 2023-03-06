@@ -98,14 +98,6 @@ namespace AppMvc.Net
                     pattern: "/{controller}/{action=index}/{id?}"
                 );
 
-                endpoints.MapAreaControllerRoute
-                (
-                    name: "product",
-                    areaName: "ProductManage",
-                    pattern: "/{controller}/{action=index}/{id?}"
-                );
-
-                
 
                 endpoints.MapControllerRoute
                 (
